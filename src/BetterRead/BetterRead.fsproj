@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Folder Include="Configuration" />
+        <Compile Include="Domain\Book.fs" />
+        <Compile Include="Domain\Errors.fs" />
+        <Folder Include="Infra" />
+        <Compile Include="Program.fs" />
+    </ItemGroup>
+
+</Project>
