@@ -1,10 +1,20 @@
-﻿// Learn more about F# at http://fsharp.org
+﻿open System.Text
+open BetterRead.Infra
+open HtmlAgilityPack
 
-open System
+let encodingBuilder (name:string) =
+    Encoding.GetEncoding name
 
-open BetterRead.Domain.Book
+let htmlWebFactory encoding =
+    HtmlWeb (OverrideEncoding = encoding)
 
 [<EntryPoint>]
 let main argv =
-    printfn "Hello World from F#!"
-    0 // return an integer exit code
+    Encoding.RegisterProvider CodePagesEncodingProvider.Instance
+    
+    let bookId = 81173
+    let htmlWeb = htmlWebFactory <| encodingBuilder "windows-1251"
+    
+    let bookInfo = BookInfoParser.parse bookId htmlWeb |> Async.RunSynchronously
+    bookInfo |> printfn "%A"
+    0

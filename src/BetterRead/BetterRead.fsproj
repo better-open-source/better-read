@@ -6,11 +6,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Configuration" />
+        <Compile Include="Configuration\BookUrls.fs" />
         <Compile Include="Domain\Book.fs" />
         <Compile Include="Domain\Errors.fs" />
-        <Folder Include="Infra" />
+        <Compile Include="Infra\BookInfoParser.fs" />
         <Compile Include="Program.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Fizzler.Systems.HtmlAgilityPack" Version="1.2.1" />
+      <PackageReference Include="HtmlAgilityPack" Version="1.11.26" />
     </ItemGroup>
 
 </Project>
