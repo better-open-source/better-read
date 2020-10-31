@@ -15,6 +15,6 @@ let main argv =
     let bookId = 81173
     let htmlWeb = htmlWebFactory <| encodingBuilder "windows-1251"
     
-    let bookInfo = BookInfoParser.parse bookId htmlWeb |> Async.RunSynchronously
+    let bookInfo = BookInfoParser.parse htmlWeb bookId |> Async.RunSynchronously
     bookInfo |> printfn "%A"
     0
