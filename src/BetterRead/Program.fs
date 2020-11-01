@@ -17,4 +17,7 @@ let main argv =
     
     let bookInfo = BookInfoParser.parse htmlWeb bookId |> Async.RunSynchronously
     bookInfo |> printfn "%A"
+    
+    let bookPages = BookSheetsParser.parse htmlWeb bookId |> Async.RunSynchronously
+    bookPages |> printfn "%A"
     0

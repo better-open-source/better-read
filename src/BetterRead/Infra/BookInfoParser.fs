@@ -3,7 +3,7 @@
 open System
 open BetterRead.Configuration
 open BetterRead.Domain.Book
-open Fizzler.Systems.HtmlAgilityPack;
+open Fizzler.Systems.HtmlAgilityPack
 open HtmlAgilityPack
 
 let private getAttributeValue (node:HtmlNode) (attr:string) =
