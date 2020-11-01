@@ -32,14 +32,14 @@ let private getPageWithNodes (_, node:HtmlNode) =
     | Some divNode -> Some divNode.ChildNodes
     | None -> None
 
-let private validateAttrs (attrs:HtmlAttributeCollection) pattern =
-    attrs |> Seq.exists (fun x -> x.Value = pattern || x.Value.Contains pattern)
+let private (|MatchAttr|_|) (pattern:string) (attrs:HtmlAttributeCollection)  =
+    attrs |> Seq.tryFind (fun x -> x.Value = pattern || x.Value.Contains pattern)
 
 let private parseNode (node:HtmlNode) =
     match node.Attributes with
-    | attrs when validateAttrs attrs "take_h1" -> Header node.InnerText
-    | attrs when validateAttrs attrs "MsoNormal" -> Paragraph node.InnerText
-    | attrs when validateAttrs attrs "img/photo_books/" -> Image <| BookUrls.baseUrl + "/" + getAttributeValue node "src"
+    | MatchAttr "take_h1" _ -> Header node.InnerText
+    | MatchAttr "MsoNormal" _ -> Paragraph node.InnerText
+    | MatchAttr "img/photo_books/" attr -> Image <| BookUrls.baseUrl + "/" + attr.Value
     | _ -> Unknown
 
 let parse (htmlWeb:HtmlWeb) bookId =
