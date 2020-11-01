@@ -6,6 +6,7 @@ type SheetContent =
     | Header of string
     | Paragraph of string
     | Image of string
+    | Unknown
 
 type Sheet = {
     Id: int
