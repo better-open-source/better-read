@@ -1,13 +1,13 @@
 ﻿module BetterRead.Infra.BookSheetsParser
 
 open System
+open BetterRead.Configuration.AsyncExtensions
 open BetterRead.Configuration
 open BetterRead.Domain.Book
 open HtmlAgilityPack
 open Fizzler.Systems.HtmlAgilityPack
 
-let private getAttributeValue (node:HtmlNode) (attr:string) =
-    node.GetAttributeValue(attr, String.Empty)
+let private (<*>) = Async.revMap
 
 let private getHtmlNodeAsync (htmlWeb:HtmlWeb) bookId pageId =
     async {
@@ -15,9 +15,6 @@ let private getHtmlNodeAsync (htmlWeb:HtmlWeb) bookId pageId =
         let! document = htmlWeb.LoadFromWebAsync url |> Async.AwaitTask
         return (pageId, document.DocumentNode)
     }
-
-let private getPageFactory htmlWeb bookId =
-    getHtmlNodeAsync htmlWeb bookId
 
 let private getPagesCount (node:HtmlNode) =
     node.QuerySelectorAll "div.navigation > a"
@@ -42,24 +39,18 @@ let private parseNode (node:HtmlNode) =
     | MatchAttr "img/photo_books/" attr -> Image <| BookUrls.baseUrl + "/" + attr.Value
     | _ -> Unknown
 
-let parse (htmlWeb:HtmlWeb) bookId =
-    async {
-        let concretePage = getPageFactory htmlWeb bookId
-        let! (_, firstNode) = concretePage 1
-        
-        let pagesCount = getPagesCount firstNode
-        let! pages =
-            [1..pagesCount]
-            |> Seq.map (fun idx -> concretePage idx)
-            |> Async.Parallel
-        
-        let pageContents =
-            pages
-            |> Seq.choose getPageWithNodes
-            |> Seq.collect (fun x -> x)
-            |> Seq.map parseNode
-            |> Seq.filter (function | Unknown -> false | _ -> true)
-            |> Seq.toArray
-        
-        return pageContents
-    }
+let parse (htmlWeb:HtmlWeb) bookId = async {
+    let concretePage = getHtmlNodeAsync htmlWeb bookId
+    let! (_, firstPageNode) = concretePage 1
+    let pagesCount = getPagesCount firstPageNode
+    
+    return!
+        [1..pagesCount]
+        |> Seq.map concretePage
+        |> Async.Parallel
+        <*> Seq.choose getPageWithNodes
+        <*> Seq.collect (fun x -> x)
+        <*> Seq.map parseNode
+        <*> Seq.filter (function | Unknown -> false | _ -> true)
+        <*> Seq.toArray
+}
