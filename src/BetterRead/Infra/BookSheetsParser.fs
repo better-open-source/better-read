@@ -1,20 +1,18 @@
 ﻿module BetterRead.Infra.BookSheetsParser
 
 open System
-open BetterRead.Configuration.AsyncExtensions
-open BetterRead.Configuration
-open BetterRead.Domain.Book
 open HtmlAgilityPack
 open Fizzler.Systems.HtmlAgilityPack
 
-let private (<*>) = Async.revMap
+open BetterRead.Configuration.AsyncExtensions
+open BetterRead.Configuration
+open BetterRead.Domain.Book
 
-let private getHtmlNodeAsync (htmlWeb:HtmlWeb) bookId pageId =
-    async {
-        let url = BookUrls.bookPage bookId pageId
-        let! document = htmlWeb.LoadFromWebAsync url |> Async.AwaitTask
-        return (pageId, document.DocumentNode)
-    }
+let private getHtmlNodeAsync (htmlWeb:HtmlWeb) bookId pageId = async {
+    let url = BookUrls.bookPage bookId pageId
+    let! document = htmlWeb.LoadFromWebAsync url |> Async.AwaitTask
+    return (pageId, document.DocumentNode)
+}
 
 let private getPagesCount (node:HtmlNode) =
     node.QuerySelectorAll "div.navigation > a"
@@ -23,11 +21,6 @@ let private getPagesCount (node:HtmlNode) =
            | (true, x) -> Some x
            | _ -> None)
     |> Seq.max
-
-let private getPageWithNodes (_, node:HtmlNode) =
-    match node.QuerySelectorAll "div.MsoNormal" |> Seq.tryExactlyOne with
-    | Some divNode -> Some divNode.ChildNodes
-    | None -> None
 
 let private (|MatchAttr|_|) (pattern:string) (attrs:HtmlAttributeCollection)  =
     attrs |> Seq.tryFind (fun x -> x.Value = pattern || x.Value.Contains pattern)
@@ -39,18 +32,24 @@ let private parseNode (node:HtmlNode) =
     | MatchAttr "img/photo_books/" attr -> Image <| BookUrls.baseUrl + "/" + attr.Value
     | _ -> Unknown
 
-let parse (htmlWeb:HtmlWeb) bookId = async {
+let private getPageNodes (node:HtmlNode) =
+    match node.QuerySelectorAll "div.MsoNormal" |> Seq.tryExactlyOne with
+    | Some divNode ->
+        divNode.ChildNodes |> Seq.map parseNode
+        |> Seq.filter (function | Unknown -> false | _ -> true)
+        |> Some
+    | None -> None
+
+let parseSheets (htmlWeb:HtmlWeb) bookId = async {
     let concretePage = getHtmlNodeAsync htmlWeb bookId
-    let! (_, firstPageNode) = concretePage 1
-    let pagesCount = getPagesCount firstPageNode
+    let! (_, firstPage) = concretePage 1
     
     return!
-        [1..pagesCount]
+        [1 .. getPagesCount firstPage]
         |> Seq.map concretePage
         |> Async.Parallel
-        <*> Seq.choose getPageWithNodes
-        <*> Seq.collect (fun x -> x)
-        <*> Seq.map parseNode
-        <*> Seq.filter (function | Unknown -> false | _ -> true)
-        <*> Seq.toArray
+        |> Async.map (Array.choose (fun (pageId, pageNode) ->
+                        match pageNode |> getPageNodes with
+                        | Some nodes -> Some {Id = pageId; SheetContents = nodes |> Seq.toArray}
+                        | _ -> None))
 }

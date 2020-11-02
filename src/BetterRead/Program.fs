@@ -2,8 +2,13 @@
 open System.Diagnostics
 open System.Text
 open System.Web
-open BetterRead.Infra
+
+open BetterRead.Domain
+open BetterRead.Domain.Book
 open HtmlAgilityPack
+
+open BetterRead.Infra.BookInfoParser
+open BetterRead.Infra.BookSheetsParser
 
 let encodingBuilder (name:string) =
     Encoding.GetEncoding name
@@ -18,11 +23,7 @@ let getBookId url =
     | (true, id) -> Some id
     | _ -> failwith "todo"
 
-[<EntryPoint>]
-let main _ =
-    Encoding.RegisterProvider CodePagesEncodingProvider.Instance
-    Console.OutputEncoding <- Encoding.UTF8
-    
+let mainAsync = async {
     let url = "http://loveread.ec/view_global.php?id=81173"
     let bookId = getBookId url |> Option.get
     let htmlWeb = htmlWebFactory <| encodingBuilder "windows-1251"
@@ -30,12 +31,27 @@ let main _ =
     let timer = Stopwatch()
     timer.Start()
     
-    let bookInfo = BookInfoParser.parse htmlWeb bookId |> Async.RunSynchronously
-    bookInfo |> printfn "%A"
+    let! bookInfo = parseBookInfo htmlWeb bookId
+    let! bookSheets = parseSheets htmlWeb bookId
     
-    let bookPages = BookSheetsParser.parse htmlWeb bookId |> Async.RunSynchronously
-    bookPages |> printfn "%A"
+    let book = {
+        Info = bookInfo
+        Sheets = bookSheets
+    }
     
     timer.Stop()
-    printf "sec: %d, ms: %d" timer.Elapsed.Seconds timer.Elapsed.Milliseconds
-    0
+    
+    printfn "%A" book.Info
+    printfn "sheets %d" book.Sheets.Length
+    printfn "elapsed ms: %d" timer.Elapsed.Milliseconds
+    
+    return 0
+}
+
+[<EntryPoint>]
+let main _ =
+    Encoding.RegisterProvider CodePagesEncodingProvider.Instance
+    Console.OutputEncoding <- Encoding.UTF8
+    
+    mainAsync |> Async.RunSynchronously
+    

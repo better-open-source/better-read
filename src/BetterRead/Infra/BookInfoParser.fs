@@ -22,7 +22,7 @@ let private extractBookName bookId (node:HtmlNode) =
 let private extractAuthor (node:HtmlNode) =
     extractTitleWith node <| "author="
 
-let parse (htmlWeb:HtmlWeb) bookId = async {
+let parseBookInfo (htmlWeb:HtmlWeb) bookId = async {
     let url = BookUrls.bookUrl bookId
     let! htmlDocument = htmlWeb.LoadFromWebAsync url |> Async.AwaitTask
     let documentNode = htmlDocument.DocumentNode
