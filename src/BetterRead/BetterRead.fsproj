@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="Extensions\AsyncExtensions.fs" />
         <Compile Include="Configuration\BookUrls.fs" />
         <Compile Include="Domain\Book.fs" />
         <Compile Include="Domain\Errors.fs" />
