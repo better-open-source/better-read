@@ -17,19 +17,20 @@ let private getHtmlNodeAsync (htmlWeb:HtmlWeb) bookId pageId = async {
 let private getPagesCount (node:HtmlNode) =
     node.QuerySelectorAll "div.navigation > a"
     |> Seq.choose (fun n ->
+           
            match Int32.TryParse(n.InnerHtml) with
            | (true, x) -> Some x
            | _ -> None)
     |> Seq.max
 
-let private (|MatchAttr|_|) (pattern:string) (attrs:HtmlAttributeCollection)  =
+let private (|Attr|_|) (pattern:string) (attrs:HtmlAttributeCollection)  =
     attrs |> Seq.tryFind (fun x -> x.Value = pattern || x.Value.Contains pattern)
 
 let private parseNode (node:HtmlNode) =
     match node.Attributes with
-    | MatchAttr "take_h1" _ -> Header node.InnerText
-    | MatchAttr "MsoNormal" _ -> Paragraph node.InnerText
-    | MatchAttr "img/photo_books/" attr -> Image <| BookUrls.baseUrl + "/" + attr.Value
+    | Attr "take_h1" _ -> Header node.InnerText
+    | Attr "MsoNormal" _ -> Paragraph node.InnerText
+    | Attr "img/photo_books/" img -> Image <| BookUrls.baseUrl + "/" + img.Value
     | _ -> Unknown
 
 let private getPageNodes (node:HtmlNode) =

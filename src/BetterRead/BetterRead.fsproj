@@ -12,6 +12,7 @@
         <Compile Include="Domain\Errors.fs" />
         <Compile Include="Infra\BookInfoParser.fs" />
         <Compile Include="Infra\BookSheetsParser.fs" />
+        <Compile Include="Infra\BookBuilder.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
