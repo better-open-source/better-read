@@ -3,10 +3,9 @@ open System.Diagnostics
 open System.Text
 open System.Web
 
-open BetterRead.Domain
-open BetterRead.Domain.Book
 open HtmlAgilityPack
 
+open BetterRead.Domain.Book
 open BetterRead.Infra.BookInfoParser
 open BetterRead.Infra.BookSheetsParser
 

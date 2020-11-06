@@ -12,10 +12,12 @@
         <Compile Include="Domain\Errors.fs" />
         <Compile Include="Infra\BookInfoParser.fs" />
         <Compile Include="Infra\BookSheetsParser.fs" />
+        <Compile Include="Infra\BookBuilder.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="DocX" Version="1.7.1" />
       <PackageReference Include="Fizzler.Systems.HtmlAgilityPack" Version="1.2.1" />
       <PackageReference Include="HtmlAgilityPack" Version="1.11.26" />
     </ItemGroup>
