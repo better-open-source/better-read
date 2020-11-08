@@ -2,6 +2,12 @@
     
 open System
 
+type DocumentContent =
+    | Heading of string
+    | Section of string
+    | Picture of byte[]
+    | Skipped
+
 type SheetContent =
     | Header of string
     | Paragraph of string

@@ -4,6 +4,8 @@ open System.IO
 open System.Net.Http
 open System.Threading
 
+open BetterRead.Configuration.AsyncExtensions
+open BetterRead.Domain.Book
 open Xceed.Document.NET
 open Xceed.Words.NET
 
@@ -18,7 +20,7 @@ let downloadImage (url:string) = async {
     use client = new HttpClient()
     let! stream = client.GetStreamAsync url |> Async.AwaitTask
     let! ms = toMemoryStream stream
-    return ms.ToArray
+    return ms.ToArray()
 }
 
 let buildHeader content (doc:DocX) =
@@ -33,3 +35,18 @@ let buildParagraph content (doc:DocX) =
     p.IndentationFirstLine <- (float32(1))
     p.Alignment <- Alignment.both
     ignore
+
+let mapContent = function
+    | Header hdr -> async { return Heading hdr} 
+    | Image img -> async { return! downloadImage img |> Async.map (fun x -> DocumentContent.Picture x) }
+    | Paragraph prg -> async { return DocumentContent.Section prg }
+    | Unknown -> async { return Skipped }
+
+let temp (data:SheetContent) = async {
+    match! mapContent data with
+    | Heading head -> failwith ""
+    | Picture pic -> failwith ""
+    | Section sec -> failwith ""
+    | Skipped -> failwith ""
+}
+    
