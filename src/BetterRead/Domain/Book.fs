@@ -5,7 +5,7 @@ open System
 type SheetContent =
     | Header of string
     | Paragraph of string
-    | Image of string
+    | Image of byte[] option * Uri
     | Unknown
 
 type Sheet = {
@@ -18,7 +18,7 @@ type BookInfo = {
     Name: string
     Author: string
     Url: Uri
-    Image: Uri
+    Image: byte[] option * Uri
 }
 
 type Book = {

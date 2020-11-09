@@ -1,10 +1,13 @@
 ﻿module BetterRead.Infra.BookInfoParser 
 
 open System
-open BetterRead.Configuration
-open BetterRead.Domain.Book
+
 open Fizzler.Systems.HtmlAgilityPack
 open HtmlAgilityPack
+
+open BetterRead.Configuration
+open BetterRead.Domain.Book
+open BetterRead.Infra.HttpFetcher
 
 let private getAttributeValue (node:HtmlNode) (attr:string) =
     node.GetAttributeValue(attr, String.Empty)
@@ -25,6 +28,8 @@ let private extractAuthor (node:HtmlNode) =
 let parseBookInfo (htmlWeb:HtmlWeb) bookId = async {
     let url = BookUrls.bookUrl bookId
     let! htmlDocument = htmlWeb.LoadFromWebAsync url |> Async.AwaitTask
+    let! image = downloadContent (BookUrls.bookCover bookId |> Uri)
+    
     let documentNode = htmlDocument.DocumentNode
     
     return {
@@ -32,5 +37,5 @@ let parseBookInfo (htmlWeb:HtmlWeb) bookId = async {
         Name = extractBookName bookId documentNode |> Option.defaultValue "N/F"
         Author = extractAuthor documentNode |> Option.defaultValue "N/F"
         Url = Uri <| url
-        Image = Uri <| BookUrls.bookCover bookId }
+        Image = image }
 }

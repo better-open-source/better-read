@@ -1,11 +1,13 @@
 ﻿open System
 open System.Diagnostics
+open System.IO
 open System.Text
 open System.Web
 
 open HtmlAgilityPack
 
 open BetterRead.Domain.Book
+open BetterRead.Infra.BookBuilder
 open BetterRead.Infra.BookInfoParser
 open BetterRead.Infra.BookSheetsParser
 
@@ -27,6 +29,8 @@ let mainAsync = async {
     let bookId = getBookId url |> Option.get
     let htmlWeb = htmlWebFactory <| encodingBuilder "windows-1251"
     
+    printfn "Fetching book from url: %s\n..." url
+    
     let timer = Stopwatch()
     timer.Start()
     
@@ -42,7 +46,18 @@ let mainAsync = async {
     
     printfn "%A" book.Info
     printfn "sheets %d" book.Sheets.Length
-    printfn "elapsed ms: %d" timer.Elapsed.Milliseconds
+    printfn "elapsed ms: %d\n" timer.Elapsed.Milliseconds
+    
+    timer.Reset()
+    timer.Start()
+    
+    printfn "Generating book..."
+    let content = generateDocument book
+    File.WriteAllBytes(sprintf "%s.docx" book.Info.Name, content)
+    
+    printfn "elapsed ms: %d\n" timer.Elapsed.Milliseconds
+    
+    timer.Stop()
     
     return 0
 }
