@@ -35,7 +35,7 @@ let private parseNode (node:HtmlNode) =
     | Attr "MsoNormal" _          -> Paragraph node.InnerText |> retn
     | Attr "img/photo_books/" img -> BookUrls.baseUrl + "/" + img.Value
                                      |> Uri |> downloadContent
-                                     |> Async.map (fun x -> Image x)
+                                     |> Async.map Image
     | _                           -> Unknown |> retn
 
 let private getPageNodes (node:HtmlNode) =
@@ -45,7 +45,8 @@ let private getPageNodes (node:HtmlNode) =
 
 let getSheets (pageId, pageNode) =
     match pageNode |> getPageNodes with
-    | Some nodes -> nodes |> Async.Parallel
+    | Some nodes -> nodes
+                    |> Async.Parallel
                     |> Async.map (fun contents -> Some {Id = pageId; SheetContents = contents})
     | None       -> retn None
     
@@ -53,12 +54,12 @@ let parseSheets (htmlWeb:HtmlWeb) bookId = async {
     let concretePage = getHtmlNodeAsync htmlWeb bookId
     let! (_, firstPage) = concretePage 1
     let! pages =
-        [|1 .. getPagesCount firstPage|]
+        [| 1 .. getPagesCount firstPage |]
         |> Array.map concretePage
         |> Async.Parallel
     
     return! pages
         |> Array.map getSheets
         |> Async.Parallel
-        |> Async.map (Array.choose (fun x -> x))
+        |> Async.map (Array.choose id)
 }
