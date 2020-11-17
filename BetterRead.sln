@@ -4,6 +4,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{846CB231-AB0
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BetterRead", "src\BetterRead\BetterRead.fsproj", "{F18B69EA-55CB-452F-9EED-4458CB63A081}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BetterRead.Bot", "src\BetterRead.Bot\BetterRead.Bot.fsproj", "{23044DB5-BCFA-4207-94F4-C5DC020C4AD8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,8 +16,13 @@ Global
 		{F18B69EA-55CB-452F-9EED-4458CB63A081}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F18B69EA-55CB-452F-9EED-4458CB63A081}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F18B69EA-55CB-452F-9EED-4458CB63A081}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23044DB5-BCFA-4207-94F4-C5DC020C4AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23044DB5-BCFA-4207-94F4-C5DC020C4AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23044DB5-BCFA-4207-94F4-C5DC020C4AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23044DB5-BCFA-4207-94F4-C5DC020C4AD8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F18B69EA-55CB-452F-9EED-4458CB63A081} = {846CB231-AB09-4A94-A0F1-F0F8B52F3CCE}
+		{23044DB5-BCFA-4207-94F4-C5DC020C4AD8} = {846CB231-AB09-4A94-A0F1-F0F8B52F3CCE}
 	EndGlobalSection
 EndGlobal

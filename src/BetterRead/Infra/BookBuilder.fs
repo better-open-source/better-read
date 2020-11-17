@@ -45,8 +45,8 @@ let generateDocument book =
     doc.DifferentFirstPage <- true
     doc.AddFooters()
     
-    let (bytes, logoUri) = book.Info.Image
-    buildImage bytes logoUri doc
+    let (content, uri) = book.Info.Image
+    buildImage content uri doc
     
     book.Sheets
     |> Array.collect (fun sheet -> sheet.SheetContents)
