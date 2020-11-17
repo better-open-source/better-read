@@ -2,10 +2,12 @@
     
 open System
 
+type ImageData = byte[] option * Uri
+
 type SheetContent =
     | Header of string
     | Paragraph of string
-    | Image of byte[] option * Uri
+    | Image of ImageData
     | Unknown
 
 type Sheet = {
@@ -18,7 +20,7 @@ type BookInfo = {
     Name: string
     Author: string
     Url: Uri
-    Image: byte[] option * Uri
+    Image: ImageData
 }
 
 type Book = {
