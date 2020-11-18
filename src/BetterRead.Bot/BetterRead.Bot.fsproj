@@ -6,6 +6,7 @@
 
     <ItemGroup>
         <Compile Include="Controllers\BotController.fs" />
+        <Compile Include="Controllers\HomeController.fs" />
         <Compile Include="Bots\EchoBot.fs" />
         <Compile Include="Adapters\AdapterWithErrorHandler.fs" />
         <Compile Include="Startup.fs" />
@@ -16,5 +17,9 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.0" />
         <PackageReference Include="Microsoft.Bot.Builder.Dialogs" Version="4.11.0" />
         <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.11.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="wwwroot\default.htm" />
     </ItemGroup>
 </Project>

@@ -34,6 +34,7 @@ type Startup private () =
             .UseAuthorization()
             .UseEndpoints(fun endpoints ->
                 endpoints.MapControllers() |> ignore
+                endpoints.MapDefaultControllerRoute() |> ignore
             ) |> ignore
 
     member val Configuration : IConfiguration = null with get, set
