@@ -1,7 +1,11 @@
 namespace BetterRead.Bot
 
+open BetterRead.Bot.Bots
+open BetterRead.Bot.AdapterWithErrorHandler
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
+open Microsoft.Bot.Builder
+open Microsoft.Bot.Builder.Integration.AspNet.Core
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
@@ -11,23 +15,25 @@ type Startup private () =
         Startup() then
         this.Configuration <- configuration
 
-    // This method gets called by the runtime. Use this method to add services to the container.
     member this.ConfigureServices(services: IServiceCollection) =
-        // Add framework services.
-        services.AddControllers() |> ignore
+        services
+            .AddSingleton<IBot, EchoBot>()
+            .AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>()
+            .AddControllers()
+            .AddNewtonsoftJson()
+        |> ignore
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     member this.Configure(app: IApplicationBuilder, env: IWebHostEnvironment) =
         if (env.IsDevelopment()) then
             app.UseDeveloperExceptionPage() |> ignore
 
-        app.UseHttpsRedirection() |> ignore
-        app.UseRouting() |> ignore
-
-        app.UseAuthorization() |> ignore
-
-        app.UseEndpoints(fun endpoints ->
-            endpoints.MapControllers() |> ignore
+        app.UseDefaultFiles()
+            .UseStaticFiles()
+            .UseWebSockets()
+            .UseRouting()
+            .UseAuthorization()
+            .UseEndpoints(fun endpoints ->
+                endpoints.MapControllers() |> ignore
             ) |> ignore
 
     member val Configuration : IConfiguration = null with get, set

@@ -6,9 +6,10 @@
 
     <ItemGroup>
         <Compile Include="Controllers\BotController.fs" />
+        <Compile Include="Bots\EchoBot.fs" />
+        <Compile Include="Adapters\AdapterWithErrorHandler.fs" />
         <Compile Include="Startup.fs" />
         <Compile Include="Program.fs" />
-        <Compile Include="Bots\DialogBot.fs" />
     </ItemGroup>
 
     <ItemGroup>
