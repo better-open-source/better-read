@@ -8,7 +8,7 @@ open Microsoft.Bot.Builder.Integration.AspNet.Core
 [<Route("api/messages")>]
 type BotController
     ( adapter : IBotFrameworkHttpAdapter,
-      bot     : IBot) =
+      bot     : IBot ) =
     inherit ControllerBase()
 
     [<HttpGet>]

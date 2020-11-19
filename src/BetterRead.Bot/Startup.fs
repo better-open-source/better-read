@@ -2,9 +2,12 @@ namespace BetterRead.Bot
 
 open BetterRead.Bot.Bots
 open BetterRead.Bot.AdapterWithErrorHandler
+open BetterRead.Bot.Dialogs
+open BetterRead.Bot.StateAccessors
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Bot.Builder
+open Microsoft.Bot.Builder.Dialogs
 open Microsoft.Bot.Builder.Integration.AspNet.Core
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
@@ -17,8 +20,12 @@ type Startup private () =
 
     member this.ConfigureServices(services: IServiceCollection) =
         services
-            .AddSingleton<IBot, EchoBot>()
+            .AddSingleton<IBot, DialogBot<MainDialog>>()
+            .AddSingleton<Dialog, MainDialog>()
             .AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>()
+            .AddSingleton<ConversationState>()
+            .AddSingleton<BotStateAccessors>()
+            .AddSingleton<IStorage, MemoryStorage>()
             .AddControllers()
             .AddNewtonsoftJson()
         |> ignore
