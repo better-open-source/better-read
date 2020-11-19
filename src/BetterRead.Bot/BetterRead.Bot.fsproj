@@ -5,9 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <Compile Include="StateAccessors.fs" />
         <Compile Include="Controllers\BotController.fs" />
         <Compile Include="Controllers\HomeController.fs" />
-        <Compile Include="Bots\EchoBot.fs" />
+        <Compile Include="Bots\DialogBot.fs" />
+        <Compile Include="Dialogs\GreetingDialog.fs" />
+        <Compile Include="Dialogs\MainDialog.fs" />
         <Compile Include="Adapters\AdapterWithErrorHandler.fs" />
         <Compile Include="Startup.fs" />
         <Compile Include="Program.fs" />
@@ -17,9 +20,5 @@
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.0" />
         <PackageReference Include="Microsoft.Bot.Builder.Dialogs" Version="4.11.0" />
         <PackageReference Include="Microsoft.Bot.Builder.Integration.AspNet.Core" Version="4.11.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <_ContentIncludedByDefault Remove="wwwroot\default.htm" />
     </ItemGroup>
 </Project>
