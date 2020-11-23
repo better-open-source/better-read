@@ -5,6 +5,15 @@ open BetterRead.Bot.StateAccessors
 open Microsoft.Bot.Builder.Dialogs
 
 module GreetingDialogModule =
+    let (|GreetingCommand|_|) str =
+        match str with
+        | "/start" -> Some GreetingCommand
+        | _ -> None
+
+module private InternalGreetingDialogModule =
+    
+    [<Literal>]
+    let greetingCommand = "/start" 
     
     [<Literal>]
     let mainFlowId = "GreetingDialog.mainFlow"
@@ -19,7 +28,7 @@ module GreetingDialogModule =
         WaterfallStep(finalStepAsync)
     |]
     
-open GreetingDialogModule
+open InternalGreetingDialogModule
 
 type GreetingDialog(dialogId:string, accessors: BotStateAccessors) as this =
     inherit ComponentDialog(dialogId)

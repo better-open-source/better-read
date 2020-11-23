@@ -1,25 +1,38 @@
 ﻿namespace BetterRead.Bot.Dialogs
 
 open System.Threading
-open BetterRead.Bot.StateAccessors
 open Microsoft.Bot.Builder.Dialogs
 
-module MainDialogModule =
+open BetterRead.Bot.Dialogs.GreetingDialogModule
+open BetterRead.Bot.Dialogs.BookInfoCommandModule
+open BetterRead.Bot.StateAccessors
+
+module private InternalMainDialogModule =
 
     [<Literal>]
     let mainFlowId = "MainDialog.mainFlow"
 
     [<Literal>]
     let greetingId = "MainDialog.greeting"
-
-    let initialStepAsync (stepContext: WaterfallStepContext) (cancellationToken: CancellationToken) =
+    
+    [<Literal>]
+    let bookInfoId = "MainDialog.bookInfo"
+    
+    let beginDialogAsync (stepContext: WaterfallStepContext) cancellationToken dialogId options =
         async {
+            return! stepContext.BeginDialogAsync(dialogId, options, cancellationToken) |> Async.AwaitTask
+        }
+    
+    let initialStepAsync (stepContext: WaterfallStepContext) cancellationToken =
+        async {
+            let beginAsync = beginDialogAsync stepContext cancellationToken
             match stepContext.Context.Activity.Text with
-            | _ -> failwith ""
-            return! stepContext.BeginDialogAsync(greetingId, null, cancellationToken) |> Async.AwaitTask
+            | GreetingCommand    -> return! beginAsync greetingId null
+            | BookInfoCommand id -> return! beginAsync bookInfoId (id :> obj)
+            | _                  -> return failwith "Invalid command!"
         } |> Async.StartAsTask
     
-    let finalStepAsync (stepContext: WaterfallStepContext) (cancellationToken: CancellationToken) =
+    let finalStepAsync (stepContext: WaterfallStepContext) cancellationToken =
         async {
             return! stepContext.EndDialogAsync(null, cancellationToken) |> Async.AwaitTask
         } |> Async.StartAsTask
@@ -29,7 +42,7 @@ module MainDialogModule =
         WaterfallStep(finalStepAsync)
     |]
     
-open MainDialogModule
+open InternalMainDialogModule
 
 type MainDialog(accessors: BotStateAccessors) as this =
     inherit ComponentDialog()

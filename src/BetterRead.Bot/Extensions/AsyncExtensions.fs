@@ -1,4 +1,4 @@
-﻿module BetterRead.Configuration.AsyncExtensions
+﻿module BetterRead.Bot.Configuration.AsyncExtensions
 
 module Async =
     let map f xAsync = async {

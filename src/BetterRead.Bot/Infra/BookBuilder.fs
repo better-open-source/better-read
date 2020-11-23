@@ -1,8 +1,8 @@
-﻿module BetterRead.Infra.BookBuilder
+﻿module BetterRead.Bot.Infra.BookBuilder
 
 open System.IO
 
-open BetterRead.Domain.Book
+open BetterRead.Bot.Domain.Book
 
 open Xceed.Document.NET
 open Xceed.Words.NET
