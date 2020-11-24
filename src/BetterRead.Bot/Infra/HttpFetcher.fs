@@ -1,4 +1,4 @@
-﻿module BetterRead.Infra.HttpFetcher
+﻿module BetterRead.Bot.Infra.HttpFetcher
 
 open System
 open System.IO

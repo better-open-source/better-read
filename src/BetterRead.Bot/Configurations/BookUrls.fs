@@ -1,4 +1,4 @@
-﻿module BetterRead.Configuration.BookUrls
+﻿module BetterRead.Bot.Configuration.BookUrls
 
 let baseUrl = "http://loveread.ec"
 

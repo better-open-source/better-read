@@ -1,14 +1,14 @@
-﻿module BetterRead.Infra.BookSheetsParser
+﻿module BetterRead.Bot.Infra.BookSheetsParser
 
 open System
 
 open HtmlAgilityPack
 open Fizzler.Systems.HtmlAgilityPack
 
-open BetterRead.Infra.HttpFetcher
-open BetterRead.Configuration.AsyncExtensions
-open BetterRead.Configuration
-open BetterRead.Domain.Book
+open BetterRead.Bot.Infra.HttpFetcher
+open BetterRead.Bot.Configuration.AsyncExtensions
+open BetterRead.Bot.Configuration
+open BetterRead.Bot.Domain.Book
 
 let retn = Async.retn
 

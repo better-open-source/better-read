@@ -1,6 +1,7 @@
-﻿module BetterRead.Domain.Book
+﻿module BetterRead.Bot.Domain.Book
     
 open System
+open System.Web
 
 type ImageData = byte[] option * Uri
 
@@ -27,3 +28,10 @@ type Book = {
     Info: BookInfo
     Sheets: Sheet[]
 }
+
+let getBookId (uri:Uri) =
+    let query = HttpUtility.ParseQueryString uri.Query
+    match Int32.TryParse(query.Get "id") with
+    | (true, id) -> Some id
+    | _ -> None
+    
