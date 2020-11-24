@@ -1,6 +1,5 @@
 ﻿namespace BetterRead.Bot.Dialogs
 
-open System.Threading
 open Microsoft.Bot.Builder.Dialogs
 
 open BetterRead.Bot.Dialogs.GreetingDialogModule
@@ -27,8 +26,8 @@ module private InternalMainDialogModule =
         async {
             let beginAsync = beginDialogAsync stepContext cancellationToken
             match stepContext.Context.Activity.Text with
-            | GreetingCommand    -> return! beginAsync greetingId null
-            | BookInfoCommand id -> return! beginAsync bookInfoId (id :> obj)
+            | GreetingCommand    -> return! beginAsync greetingId None
+            | BookInfoCommand id -> return! beginAsync bookInfoId (Some id)
             | _                  -> return failwith "Invalid command!"
         } |> Async.StartAsTask
     
@@ -48,5 +47,6 @@ type MainDialog(accessors: BotStateAccessors) as this =
     inherit ComponentDialog()
     do
         this.AddDialog(GreetingDialog(greetingId, accessors)) |> ignore
+        this.AddDialog(BookInfoDialog(bookInfoId, accessors)) |> ignore
         this.AddDialog(WaterfallDialog(mainFlowId, waterfallSteps)) |> ignore
         this.InitialDialogId <- mainFlowId
