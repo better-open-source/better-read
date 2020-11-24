@@ -12,6 +12,7 @@
         <Compile Include="Infra\BookInfoParser.fs" />
         <Compile Include="Infra\BookSheetsParser.fs" />
         <Compile Include="Infra\BookBuilder.fs" />
+        <Compile Include="Infra\HtmlWebFactory.fs" />
         <Compile Include="StateAccessors.fs" />
         <Compile Include="Controllers\BotController.fs" />
         <Compile Include="Controllers\HomeController.fs" />

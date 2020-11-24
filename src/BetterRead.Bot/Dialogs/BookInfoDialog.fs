@@ -2,16 +2,15 @@
 
 open System
 
-open System.Text
-open HtmlAgilityPack
 open Microsoft.Bot.Builder
 open Microsoft.Bot.Builder.Dialogs
+open Microsoft.Bot.Schema
 
 open BetterRead.Bot.Configuration.AsyncExtensions
 open BetterRead.Bot.Domain.Book
 open BetterRead.Bot.StateAccessors
 open BetterRead.Bot.Infra.BookInfoParser
-open Microsoft.Bot.Schema
+open BetterRead.Bot.Infra.HtmlWebFactory
 
 module BookInfoCommandModule =
     let (|BookInfoCommand|_|) str =
@@ -23,14 +22,6 @@ module InternalBookInfoCommandModule =
 
     [<Literal>]
     let mainFlowId = "BookInfoDialog.mainFlow"
-    
-    let encodingBuilder (name:string) =
-        Encoding.GetEncoding name
-
-    let htmlWebFactory encoding =
-        HtmlWeb (OverrideEncoding = encoding)
-    
-    let htmlWeb = htmlWebFactory <| encodingBuilder "windows-1251"
     
     let printInfo (context:ITurnContext) (bookInfo:BookInfo option) =
         match bookInfo with

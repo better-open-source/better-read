@@ -10,8 +10,6 @@ open BetterRead.Bot.Configuration.AsyncExtensions
 open BetterRead.Bot.Configuration
 open BetterRead.Bot.Domain.Book
 
-let retn = Async.retn
-
 let private getHtmlNodeAsync (htmlWeb:HtmlWeb) bookId pageId = async {
     let url = BookUrls.bookPage bookId pageId
     let! document = htmlWeb.LoadFromWebAsync url |> Async.AwaitTask
@@ -31,12 +29,12 @@ let private (|Attr|_|) pattern (attrs:HtmlAttributeCollection)  =
 
 let private parseNode (node:HtmlNode) =
     match node.Attributes with
-    | Attr "take_h1" _            -> Header node.InnerText |> retn
-    | Attr "MsoNormal" _          -> Paragraph node.InnerText |> retn
+    | Attr "take_h1" _            -> Header node.InnerText |> async.Return
+    | Attr "MsoNormal" _          -> Paragraph node.InnerText |> async.Return
     | Attr "img/photo_books/" img -> BookUrls.baseUrl + "/" + img.Value
                                      |> Uri |> downloadContent
                                      |> Async.map Image
-    | _                           -> Unknown |> retn
+    | _                           -> Unknown |> async.Return
 
 let private getPageNodes (node:HtmlNode) =
     match node.QuerySelectorAll "div.MsoNormal" |> Seq.tryExactlyOne with
@@ -48,7 +46,7 @@ let getSheets (pageId, pageNode) =
     | Some nodes -> nodes
                     |> Async.Parallel
                     |> Async.map (fun contents -> Some {Id = pageId; SheetContents = contents})
-    | None       -> retn None
+    | None       -> async.Return None
     
 let parseSheets (htmlWeb:HtmlWeb) bookId = async {
     let concretePage = getHtmlNodeAsync htmlWeb bookId
