@@ -1,6 +1,5 @@
 ﻿namespace BetterRead.Bot.Dialogs
 
-open System.Threading
 open BetterRead.Bot.StateAccessors
 open Microsoft.Bot.Builder.Dialogs
 

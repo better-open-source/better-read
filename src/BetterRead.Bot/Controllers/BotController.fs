@@ -4,8 +4,8 @@ open Microsoft.AspNetCore.Mvc
 open Microsoft.Bot.Builder
 open Microsoft.Bot.Builder.Integration.AspNet.Core
 
-[<ApiController>]
 [<Route("api/messages")>]
+[<ApiController>]
 type BotController
     ( adapter : IBotFrameworkHttpAdapter,
       bot     : IBot ) =
