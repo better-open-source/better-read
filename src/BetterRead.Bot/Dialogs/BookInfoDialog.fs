@@ -23,19 +23,29 @@ module InternalBookInfoCommandModule =
     [<Literal>]
     let mainFlowId = "BookInfoDialog.mainFlow"
     
+    let sendCardActivity (context:ITurnContext) (card:HeroCard) =
+        async {
+            let activity = MessageFactory.Attachment(card.ToAttachment())
+            let! _= context.SendActivityAsync(activity) |> Async.AwaitTask
+            ()
+        } |> Async.Ignore
+    
     let printInfo (context:ITurnContext) (bookInfo:BookInfo option) =
         match bookInfo with
-        | Some info -> 
-            let msg = sprintf "Book: %s \n\n\u200CAuthor: %s" info.Name info.Author
+        | Some info ->
+            let title = sprintf "Book: %s \n\n\u200CAuthor: %s" info.Name info.Author
+            let downloadCommand = sprintf "download:%s" (info.Url.ToString())
+            let buttons = ResizeArray<CardAction> [
+                CardAction (ActionTypes.ImBack, "Download", value = downloadCommand) ]
+            let card = HeroCard(title = title, buttons = buttons)
+                
             match info.Image with
-            | (Some content, imageUri) -> async {
-                let imgContent = Convert.ToBase64String content
-                let attachment = Attachment ("image/png", sprintf "data:image/png;base64,%s" imgContent, info.Name, imageUri.ToString())
-                let activity = MessageFactory.Attachment(attachment, msg)
-                let! _= context.SendActivityAsync(activity) |> Async.AwaitTask
+            | (Some _, imageUri) -> async {
+                card.Images <- ResizeArray<CardImage> [CardImage(imageUri.ToString(), imageUri.ToString())]
+                do! sendCardActivity context card
                 ignore 0 }
             | (None, _) -> async {
-                let! _= context.SendActivityAsync(msg) |> Async.AwaitTask
+                do! sendCardActivity context card
                 ignore 0 }
         | None -> async {
             let! _= context.SendActivityAsync("We are not able to read this book for some reason...") |> Async.AwaitTask
@@ -52,9 +62,7 @@ module InternalBookInfoCommandModule =
             return! stepContext.EndDialogAsync(null, cancellationToken) |> Async.AwaitTask
         } |> Async.StartAsTask
 
-    let waterfallSteps = [|
-        WaterfallStep(finalStepAsync)
-    |]
+    let waterfallSteps = [| WaterfallStep(finalStepAsync) |]
     
 open InternalBookInfoCommandModule
 
