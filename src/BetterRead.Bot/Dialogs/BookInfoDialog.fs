@@ -23,42 +23,31 @@ module InternalBookInfoCommandModule =
     [<Literal>]
     let mainFlowId = "BookInfoDialog.mainFlow"
     
-    let sendCardActivity (context:ITurnContext) (card:HeroCard) =
-        async {
-            let activity = MessageFactory.Attachment(card.ToAttachment())
-            let! _= context.SendActivityAsync(activity) |> Async.AwaitTask
-            ()
-        } |> Async.Ignore
-    
     let printInfo (context:ITurnContext) (bookInfo:BookInfo option) =
         match bookInfo with
-        | Some info ->
+        | Some info -> async {
             let title = sprintf "Book: %s \n\n\u200CAuthor: %s" info.Name info.Author
-            let downloadCommand = sprintf "download:%s" (info.Url.ToString())
-            let buttons = ResizeArray<CardAction> [
-                CardAction (ActionTypes.ImBack, "Download", value = downloadCommand) ]
-            let card = HeroCard(title = title, buttons = buttons)
+            let buttons = [ CardAction (ActionTypes.ImBack, "Download", value = sprintf "download:%d" info.Id) ]
+            let card = HeroCard(title = title, buttons = ResizeArray<CardAction> buttons)
                 
             match info.Image with
-            | (Some _, imageUri) -> async {
-                card.Images <- ResizeArray<CardImage> [CardImage(imageUri.ToString(), imageUri.ToString())]
-                do! sendCardActivity context card
-                ignore 0 }
-            | (None, _) -> async {
-                do! sendCardActivity context card
-                ignore 0 }
+            | (Some _, imageUri) ->
+                card.Images <- ResizeArray<CardImage> [ CardImage(imageUri.ToString(), imageUri.ToString()) ]
+            | (None, _) -> () 
+        
+            let activity = MessageFactory.Attachment(card.ToAttachment())
+            let! _= context.SendActivityAsync(activity) |> Async.AwaitTask
+            () }
         | None -> async {
             let! _= context.SendActivityAsync("We are not able to read this book for some reason...") |> Async.AwaitTask
-            ignore 0 }
+            () }
     
     let finalStepAsync (stepContext: WaterfallStepContext) cancellationToken =
         async {
-            let! infoOtp = stepContext.Options :?> Option<int>
-                          |> Option.map (parseBookInfo htmlWeb)
-                          |> Async.traverseOpt
-            
+            let idOpt = stepContext.Options :?> Option<int>
+            let! infoOtp = idOpt |> Option.map (parseBookInfo htmlWeb)
+                                 |> Async.traverseOpt
             do! printInfo stepContext.Context infoOtp
-            
             return! stepContext.EndDialogAsync(null, cancellationToken) |> Async.AwaitTask
         } |> Async.StartAsTask
 
@@ -66,7 +55,7 @@ module InternalBookInfoCommandModule =
     
 open InternalBookInfoCommandModule
 
-type BookInfoDialog(dialogId:string, accessors: BotStateAccessors) as this =
+type BookInfoDialog(dialogId:string, _accessors: BotStateAccessors) as this =
     inherit ComponentDialog(dialogId)
     do
         this.AddDialog(WaterfallDialog(mainFlowId, waterfallSteps)) |> ignore

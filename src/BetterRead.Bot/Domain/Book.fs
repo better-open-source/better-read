@@ -3,6 +3,8 @@
 open System
 open System.Web
 
+open BetterRead.Bot.Configuration.BookUrls
+
 type ImageData = byte[] option * Uri
 
 type SheetContent =
@@ -11,27 +13,27 @@ type SheetContent =
     | Image of ImageData
     | Unknown
 
-type Sheet = {
-    Id: int
-    SheetContents: SheetContent[]
-}
+type Sheet =
+    { Id: int
+      SheetContents: SheetContent[] }
 
-type BookInfo = {
-    Id: int
-    Name: string
-    Author: string
-    Url: Uri
-    Image: ImageData
-}
+type BookInfo =
+    { Id: int
+      Name: string
+      Author: string
+      Url: Uri
+      Image: ImageData }
 
-type Book = {
-    Info: BookInfo
-    Sheets: Sheet[]
-}
+type Book =
+    { Info: BookInfo
+      Sheets: Sheet[] }
 
 let getBookId (uri:Uri) =
-    let query = HttpUtility.ParseQueryString uri.Query
-    match Int32.TryParse(query.Get "id") with
-    | (true, id) -> Some id
-    | _ -> None
+    if uri.AbsoluteUri.Contains(baseUrl) then
+        let query = HttpUtility.ParseQueryString uri.Query
+        match Int32.TryParse(query.Get "id") with
+        | (true, id) -> Some id
+        | _ -> None
+    else
+        None
     
