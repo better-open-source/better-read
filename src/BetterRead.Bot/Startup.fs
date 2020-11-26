@@ -8,7 +8,9 @@ open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Bot.Builder
 open Microsoft.Bot.Builder.Dialogs
+open Microsoft.Bot.Builder.Integration
 open Microsoft.Bot.Builder.Integration.AspNet.Core
+open Microsoft.Bot.Connector.Authentication
 open Microsoft.Extensions.Configuration
 open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
@@ -20,12 +22,17 @@ type Startup private () =
 
     member this.ConfigureServices(services: IServiceCollection) =
         services
-            .AddSingleton<IBot, DialogBot<MainDialog>>()
-            .AddSingleton<Dialog, MainDialog>()
-            .AddSingleton<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>()
-            .AddSingleton<ConversationState>()
-            .AddSingleton<BotStateAccessors>()
-            .AddSingleton<IStorage, MemoryStorage>()
+            .AddBot<DialogBot<MainDialog>>(fun (options:BotFrameworkOptions) ->
+                let appId = this.Configuration.["MicrosoftAppId"]
+                let appPass = this.Configuration.["MicrosoftAppPassword"]
+                options.CredentialProvider <- SimpleCredentialProvider(appId, appPass)
+                ignore 0)
+            .AddBotFrameworkAdapterIntegration()
+            .AddTransient<Dialog, MainDialog>()
+            .AddTransient<IBotFrameworkHttpAdapter, AdapterWithErrorHandler>()
+            .AddTransient<ConversationState>()
+            .AddTransient<BotStateAccessors>()
+            .AddTransient<IStorage, MemoryStorage>()
             .AddControllers()
             .AddNewtonsoftJson()
         |> ignore
@@ -39,6 +46,7 @@ type Startup private () =
             .UseWebSockets()
             .UseRouting()
             .UseAuthorization()
+            .UseBotFramework()
             .UseEndpoints(fun endpoints ->
                 endpoints.MapControllers() |> ignore
                 endpoints.MapDefaultControllerRoute() |> ignore

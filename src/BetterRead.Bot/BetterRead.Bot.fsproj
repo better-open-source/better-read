@@ -12,6 +12,7 @@
         <Compile Include="Infra\BookInfoParser.fs" />
         <Compile Include="Infra\BookSheetsParser.fs" />
         <Compile Include="Infra\BookBuilder.fs" />
+        <Compile Include="Infra\HtmlWebFactory.fs" />
         <Compile Include="StateAccessors.fs" />
         <Compile Include="Controllers\BotController.fs" />
         <Compile Include="Controllers\HomeController.fs" />
@@ -33,5 +34,18 @@
         <PackageReference Include="HtmlAgilityPack" Version="1.11.28" />
         <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
         <PackageReference Include="System.IO.Packaging" Version="5.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Update="appsettings.Development.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+      <Content Update="appsettings.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
     </ItemGroup>
 </Project>
