@@ -18,16 +18,16 @@ module BookInfoCommandModule =
         | (true, uri) -> getBookId uri
         | _ -> None
         
-module InternalBookInfoCommandModule =
+module private InternalBookInfoCommandModule =
 
     [<Literal>]
     let mainFlowId = "BookInfoDialog.mainFlow"
     
-    let printInfo (context:ITurnContext) (bookInfo:BookInfo option) =
+    let printInfoAsync (context:ITurnContext) (bookInfo:BookInfo option) =
         match bookInfo with
         | Some info -> async {
             let title = sprintf "Book: %s \n\n\u200CAuthor: %s" info.Name info.Author
-            let buttons = [ CardAction (ActionTypes.ImBack, "Download", value = sprintf "download:%d" info.Id) ]
+            let buttons = [ CardAction (ActionTypes.ImBack, "Download", value = sprintf "/download:%d" info.Id) ]
             let card = HeroCard(title = title, buttons = ResizeArray<CardAction> buttons)
                 
             match info.Image with
@@ -47,7 +47,7 @@ module InternalBookInfoCommandModule =
             let idOpt = stepContext.Options :?> Option<int>
             let! infoOtp = idOpt |> Option.map (parseBookInfo htmlWeb)
                                  |> Async.traverseOpt
-            do! printInfo stepContext.Context infoOtp
+            do! printInfoAsync stepContext.Context infoOtp
             return! stepContext.EndDialogAsync(null, cancellationToken) |> Async.AwaitTask
         } |> Async.StartAsTask
 

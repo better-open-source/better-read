@@ -19,6 +19,7 @@
         <Compile Include="Bots\DialogBot.fs" />
         <Compile Include="Dialogs\GreetingDialog.fs" />
         <Compile Include="Dialogs\BookInfoDialog.fs" />
+        <Compile Include="Dialogs\DownloadBookDialog.fs" />
         <Compile Include="Dialogs\MainDialog.fs" />
         <Compile Include="Adapters\AdapterWithErrorHandler.fs" />
         <Compile Include="Startup.fs" />
