@@ -1,9 +1,9 @@
-﻿module BetterRead.Bot.Domain.Book
+﻿module BetterRead.Application.Domain.Book
     
 open System
 open System.Web
 
-open BetterRead.Bot.Configuration.BookUrls
+open BetterRead.Common.BookUrls
 
 type ImageData = byte[] option * Uri
 

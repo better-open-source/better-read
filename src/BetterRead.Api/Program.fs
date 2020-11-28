@@ -1,4 +1,4 @@
-namespace BetterRead.Bot
+namespace BetterRead.Api
 
 open System
 open System.Text

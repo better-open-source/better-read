@@ -1,14 +1,13 @@
-﻿module BetterRead.Bot.Infra.BookSheetsParser
+﻿module BetterRead.Application.Infra.BookSheetsParser
 
 open System
 
 open HtmlAgilityPack
 open Fizzler.Systems.HtmlAgilityPack
 
-open BetterRead.Bot.Infra.HttpFetcher
-open BetterRead.Bot.Configuration.AsyncExtensions
-open BetterRead.Bot.Configuration
-open BetterRead.Bot.Domain.Book
+open BetterRead.Common
+open BetterRead.Common.AsyncExtensions
+open BetterRead.Application.Domain.Book
 
 let private getHtmlNodeAsync (htmlWeb:HtmlWeb) bookId pageId = async {
     let url = BookUrls.bookPage bookId pageId
@@ -32,7 +31,7 @@ let private parseNode (node:HtmlNode) =
     | Attr "take_h1" _            -> Header node.InnerText |> async.Return
     | Attr "MsoNormal" _          -> Paragraph node.InnerText |> async.Return
     | Attr "img/photo_books/" img -> BookUrls.baseUrl + "/" + img.Value
-                                     |> Uri |> downloadContent
+                                     |> Uri |> HttpFetcher.downloadContent
                                      |> Async.map Image
     | _                           -> Unknown |> async.Return
 

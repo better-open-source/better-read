@@ -6,11 +6,11 @@ open Microsoft.Bot.Builder
 open Microsoft.Bot.Builder.Dialogs
 open Microsoft.Bot.Schema
 
-open BetterRead.Bot.Configuration.AsyncExtensions
-open BetterRead.Bot.Domain.Book
 open BetterRead.Bot.StateAccessors
-open BetterRead.Bot.Infra.BookInfoParser
-open BetterRead.Bot.Infra.HtmlWebFactory
+open BetterRead.Common.AsyncExtensions
+open BetterRead.Application.Domain.Book
+open BetterRead.Application.Infra.BookInfoParser
+open BetterRead.Application.Infra.HtmlWebFactory
 
 module BookInfoCommandModule =
     let (|BookInfoCommand|_|) str =

@@ -1,6 +1,7 @@
-﻿module BetterRead.Bot.Infra.HtmlWebFactory
+﻿module BetterRead.Application.Infra.HtmlWebFactory
 
 open System.Text
+
 open HtmlAgilityPack
 
 let private encodingBuilder (name:string) =

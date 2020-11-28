@@ -6,12 +6,12 @@ open Microsoft.Bot.Builder
 open Microsoft.Bot.Schema
 open Microsoft.Bot.Builder.Dialogs
 
-open BetterRead.Bot.Domain.Book
 open BetterRead.Bot.StateAccessors
-open BetterRead.Bot.Infra.BookInfoParser
-open BetterRead.Bot.Infra.BookSheetsParser
-open BetterRead.Bot.Infra.BookBuilder
-open BetterRead.Bot.Infra.HtmlWebFactory
+open BetterRead.Application.Domain.Book
+open BetterRead.Application.Infra.BookInfoParser
+open BetterRead.Application.Infra.BookSheetsParser
+open BetterRead.Application.Infra.BookBuilder
+open BetterRead.Application.Infra.HtmlWebFactory
 
 module DownloadBookCommandModule =
     let (|DownloadBookCommand|_|) (msg:string) =

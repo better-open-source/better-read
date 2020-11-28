@@ -2,10 +2,10 @@
 
 open Microsoft.Bot.Builder.Dialogs
 
+open BetterRead.Bot.StateAccessors
 open BetterRead.Bot.Dialogs.GreetingDialogModule
 open BetterRead.Bot.Dialogs.BookInfoCommandModule
 open BetterRead.Bot.Dialogs.DownloadBookCommandModule
-open BetterRead.Bot.StateAccessors
 
 module private InternalMainDialogModule =
 

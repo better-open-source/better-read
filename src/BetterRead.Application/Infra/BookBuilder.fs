@@ -1,11 +1,11 @@
-﻿module BetterRead.Bot.Infra.BookBuilder
+﻿module BetterRead.Application.Infra.BookBuilder
 
 open System.IO
 
-open BetterRead.Bot.Domain.Book
-
 open Xceed.Document.NET
 open Xceed.Words.NET
+
+open BetterRead.Application.Domain.Book
 
 let private buildHeader content (doc:DocX) =
     let p = doc.InsertParagraph().Append(content)

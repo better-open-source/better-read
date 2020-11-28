@@ -1,4 +1,4 @@
-namespace BetterRead.Bot
+namespace BetterRead.Api
 
 open BetterRead.Bot.Bots
 open BetterRead.Bot.AdapterWithErrorHandler
