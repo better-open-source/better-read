@@ -19,7 +19,7 @@ type AdapterWithErrorHandler () =
                 let! _ = ctx.SendActivityAsync "The bot encountered an error or bug." |> Async.AwaitTask
                 let! _ = ctx.SendActivityAsync "To continue to run this bot, please fix the bot source code." |> Async.AwaitTask
                 let! _ = ctx.TraceActivityAsync ("OnTurnError Trace", ex.Message, "https://www.botframework.com/schemas/error", "TurnError") |> Async.AwaitTask
-                ignore 0
+                ()
             } |> Async.StartAsTask :> Task
 
         this.OnTurnError <- Func<_,_,_>(onTurnError)
