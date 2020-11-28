@@ -38,8 +38,7 @@ type Startup private () =
             .AddTransient<BlobContainerClient>(fun sp ->
                 let connectionString = this.Configuration.GetConnectionString "blobConnectionString"
                 let blobService = BlobServiceClient(connectionString)
-                blobService.GetBlobContainerClient this.Configuration.["blobContainerName"]
-            )
+                blobService.GetBlobContainerClient this.Configuration.["blobContainerName"])
             .AddControllers()
             .AddNewtonsoftJson()
         |> ignore

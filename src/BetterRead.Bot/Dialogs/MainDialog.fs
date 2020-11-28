@@ -1,5 +1,6 @@
 ﻿namespace BetterRead.Bot.Dialogs
 
+open Azure.Storage.Blobs
 open Microsoft.Bot.Builder.Dialogs
 
 open BetterRead.Bot.StateAccessors
@@ -48,11 +49,11 @@ module private InternalMainDialogModule =
     
 open InternalMainDialogModule
 
-type MainDialog(accessors: BotStateAccessors) as this =
+type MainDialog(accessors: BotStateAccessors, blobCli: BlobContainerClient) as this =
     inherit ComponentDialog()
     do
-        this.AddDialog(GreetingDialog     (greetingId, accessors))      |> ignore
-        this.AddDialog(BookInfoDialog     (bookInfoId, accessors))      |> ignore
-        this.AddDialog(DownloadBookDialog (downloadBookId, accessors))  |> ignore
-        this.AddDialog(WaterfallDialog    (mainFlowId, waterfallSteps)) |> ignore
+        this.AddDialog(GreetingDialog     (greetingId, accessors))              |> ignore
+        this.AddDialog(BookInfoDialog     (bookInfoId, accessors))              |> ignore
+        this.AddDialog(DownloadBookDialog (downloadBookId, accessors, blobCli)) |> ignore
+        this.AddDialog(WaterfallDialog    (mainFlowId, waterfallSteps))         |> ignore
         this.InitialDialogId <- mainFlowId

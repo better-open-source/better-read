@@ -2,6 +2,7 @@
 
 open System
 
+open Azure.Storage.Blobs
 open Microsoft.Bot.Builder
 open Microsoft.Bot.Schema
 open Microsoft.Bot.Builder.Dialogs
@@ -39,7 +40,7 @@ module private InternalDownloadBookModule =
         let! _= stepContext.SendActivityAsync(activity) |> Async.AwaitTask
         () }
     
-    let finalStepAsync (stepContext: WaterfallStepContext) cancellationToken =
+    let finalStepAsync (blobCli: BlobContainerClient) (stepContext: WaterfallStepContext) cancellationToken =
         async {
             match stepContext.Options :?> Option<int> with
             | Some id ->
@@ -54,12 +55,13 @@ module private InternalDownloadBookModule =
             return! stepContext.EndDialogAsync(null, cancellationToken) |> Async.AwaitTask
         } |> Async.StartAsTask
 
-    let waterfallSteps = [| WaterfallStep(finalStepAsync) |]
+    let waterfallSteps (blobCli: BlobContainerClient) =
+        [| WaterfallStep(finalStepAsync blobCli) |]
     
 open InternalDownloadBookModule
 
-type DownloadBookDialog(dialogId:string, _accessors: BotStateAccessors) as this =
+type DownloadBookDialog(dialogId: string, _accessors: BotStateAccessors, blobCli: BlobContainerClient) as this =
     inherit ComponentDialog(dialogId)
     do
-        this.AddDialog(WaterfallDialog(mainFlowId, waterfallSteps)) |> ignore
+        this.AddDialog(WaterfallDialog(mainFlowId, waterfallSteps blobCli)) |> ignore
         this.InitialDialogId <- mainFlowId
