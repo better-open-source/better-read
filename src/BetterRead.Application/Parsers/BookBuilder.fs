@@ -1,4 +1,4 @@
-﻿module BetterRead.Application.Infra.BookBuilder
+﻿module BetterRead.Application.Parsers.BookBuilder
 
 open System.IO
 

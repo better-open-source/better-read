@@ -7,9 +7,9 @@
   <ItemGroup>
     <Compile Include="Domain\Book.fs" />
     <Compile Include="Infra\HtmlWebFactory.fs" />
-    <Compile Include="Infra\BookInfoParser.fs" />
-    <Compile Include="Infra\BookSheetsParser.fs" />
-    <Compile Include="Infra\BookBuilder.fs" />
+    <Compile Include="Parsers\BookInfoParser.fs" />
+    <Compile Include="Parsers\BookSheetsParser.fs" />
+    <Compile Include="Parsers\BookBuilder.fs" />
   </ItemGroup>
 
   <ItemGroup>

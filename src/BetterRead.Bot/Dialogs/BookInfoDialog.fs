@@ -9,7 +9,7 @@ open Microsoft.Bot.Schema
 open BetterRead.Bot.StateAccessors
 open BetterRead.Common.AsyncExtensions
 open BetterRead.Application.Domain.Book
-open BetterRead.Application.Infra.BookInfoParser
+open BetterRead.Application.Parsers.BookInfoParser
 open BetterRead.Application.Infra.HtmlWebFactory
 
 module BookInfoCommandModule =

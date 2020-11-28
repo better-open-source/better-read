@@ -8,9 +8,9 @@ open Microsoft.Bot.Builder.Dialogs
 
 open BetterRead.Bot.StateAccessors
 open BetterRead.Application.Domain.Book
-open BetterRead.Application.Infra.BookInfoParser
-open BetterRead.Application.Infra.BookSheetsParser
-open BetterRead.Application.Infra.BookBuilder
+open BetterRead.Application.Parsers.BookInfoParser
+open BetterRead.Application.Parsers.BookSheetsParser
+open BetterRead.Application.Parsers.BookBuilder
 open BetterRead.Application.Infra.HtmlWebFactory
 
 module DownloadBookCommandModule =

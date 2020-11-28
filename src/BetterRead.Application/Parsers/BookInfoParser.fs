@@ -1,4 +1,4 @@
-﻿module BetterRead.Application.Infra.BookInfoParser 
+﻿module BetterRead.Application.Parsers.BookInfoParser 
 
 open System
 
