@@ -2,10 +2,11 @@
 
 open System
 open System.Threading.Tasks
+
 open Microsoft.Bot.Builder
 open Microsoft.Bot.Builder.Integration.AspNet.Core
-open Microsoft.Extensions.Logging
 open Microsoft.Bot.Builder.TraceExtensions;
+open Microsoft.Extensions.Logging
 
 type AdapterWithErrorHandler () =
     inherit BotFrameworkHttpAdapter()

@@ -1,6 +1,6 @@
 ﻿namespace BetterRead.Bot.Dialogs
 
-open BetterRead.Bot.Configuration.AsyncExtensions
+open BetterRead.Common.AsyncExtensions
 open BetterRead.Bot.StateAccessors
 open Microsoft.Bot.Builder.Dialogs
 
@@ -28,7 +28,7 @@ module private InternalGreetingDialogModule =
     
 open InternalGreetingDialogModule
 
-type GreetingDialog(dialogId: string, accessors: BotStateAccessors) as this =
+type GreetingDialog(dialogId: string, _accessors: BotStateAccessors) as this =
     inherit ComponentDialog(dialogId)
     do
         this.AddDialog(WaterfallDialog(mainFlowId, waterfallSteps)) |> ignore

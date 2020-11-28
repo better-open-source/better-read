@@ -1,13 +1,13 @@
-﻿module BetterRead.Bot.Infra.BookInfoParser 
+﻿module BetterRead.Application.Parsers.BookInfoParser 
 
 open System
 
-open Fizzler.Systems.HtmlAgilityPack
 open HtmlAgilityPack
+open Fizzler.Systems.HtmlAgilityPack
 
-open BetterRead.Bot.Configuration
-open BetterRead.Bot.Domain.Book
-open BetterRead.Bot.Infra.HttpFetcher
+open BetterRead.Common
+open BetterRead.Common.HttpFetcher
+open BetterRead.Application.Domain.Book
 
 let private getAttributeValue (node:HtmlNode) (attr:string) =
     node.GetAttributeValue(attr, String.Empty)

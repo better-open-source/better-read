@@ -1,4 +1,4 @@
-﻿namespace BetterRead.Bot.Controllers
+﻿namespace BetterRead.Api.Controllers
 
 open Microsoft.AspNetCore.Mvc
 

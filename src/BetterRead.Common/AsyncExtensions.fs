@@ -1,4 +1,4 @@
-﻿module BetterRead.Bot.Configuration.AsyncExtensions
+﻿module BetterRead.Common.AsyncExtensions
 
 module Async =
     let traverseOpt = function
