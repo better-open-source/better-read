@@ -16,7 +16,7 @@ module private InternalGreetingDialogModule =
     [<Literal>]
     let mainFlowId = "GreetingDialog.mainFlow"
     
-    let finalStepAsync (stepContext: WaterfallStepContext) cancellationToken =
+    let finalStepAsync (stepContext : WaterfallStepContext) cancellationToken =
         async {
             let! _= stepContext.Context.SendActivityAsync("Hi from F#!") |> Async.AwaitTask
             return! stepContext.EndDialogAsync(null, cancellationToken) |> Async.AwaitTask
@@ -28,7 +28,9 @@ module private InternalGreetingDialogModule =
     
 open InternalGreetingDialogModule
 
-type GreetingDialog(dialogId: string, _accessors: BotStateAccessors) as this =
+type GreetingDialog
+    ( dialogId    : string,
+      _accessors  : BotStateAccessors) as this =
     inherit ComponentDialog(dialogId)
     do
         this.AddDialog(WaterfallDialog(mainFlowId, waterfallSteps)) |> ignore

@@ -1,4 +1,4 @@
-﻿module BetterRead.Bot.AdapterWithErrorHandler
+﻿namespace BetterRead.Bot.AdapterWithErrorHandler
 
 open System
 open System.Threading.Tasks

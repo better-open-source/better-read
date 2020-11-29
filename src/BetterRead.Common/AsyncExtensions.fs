@@ -2,8 +2,8 @@
 
 module Async =
     let traverseOpt = function
-        | Some y -> async {
-            let! result = y
+        | Some x -> async {
+            let! result = x
             return Some result }
         | None   -> None |> async.Return
     

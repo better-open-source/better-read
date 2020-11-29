@@ -1,5 +1,6 @@
 ﻿namespace BetterRead.Bot.Dialogs
 
+open Azure.Storage.Blobs
 open Microsoft.Bot.Builder.Dialogs
 
 open BetterRead.Bot.StateAccessors
@@ -21,12 +22,12 @@ module private InternalMainDialogModule =
     [<Literal>]
     let downloadBookId = "MainDialog.downloadBook"
     
-    let beginDialogAsync (stepContext: WaterfallStepContext) cancellationToken dialogId options =
+    let beginDialogAsync (stepContext : WaterfallStepContext) cancellationToken dialogId options =
         async {
             return! stepContext.BeginDialogAsync(dialogId, options, cancellationToken) |> Async.AwaitTask
         }
     
-    let initialStepAsync (stepContext: WaterfallStepContext) cancellationToken =
+    let initialStepAsync (stepContext : WaterfallStepContext) cancellationToken =
         async {
             let beginAsync = beginDialogAsync stepContext cancellationToken
             match stepContext.Context.Activity.Text with
@@ -36,7 +37,7 @@ module private InternalMainDialogModule =
             | _                      -> return  failwith "Invalid command!"
         } |> Async.StartAsTask
     
-    let finalStepAsync (stepContext: WaterfallStepContext) cancellationToken =
+    let finalStepAsync (stepContext : WaterfallStepContext) cancellationToken =
         async {
             return! stepContext.EndDialogAsync(null, cancellationToken) |> Async.AwaitTask
         } |> Async.StartAsTask
@@ -48,11 +49,13 @@ module private InternalMainDialogModule =
     
 open InternalMainDialogModule
 
-type MainDialog(accessors: BotStateAccessors) as this =
+type MainDialog
+    ( accessors  : BotStateAccessors,
+      blobCli    : BlobContainerClient) as this =
     inherit ComponentDialog()
     do
-        this.AddDialog(GreetingDialog     (greetingId, accessors))      |> ignore
-        this.AddDialog(BookInfoDialog     (bookInfoId, accessors))      |> ignore
-        this.AddDialog(DownloadBookDialog (downloadBookId, accessors))  |> ignore
-        this.AddDialog(WaterfallDialog    (mainFlowId, waterfallSteps)) |> ignore
+        this.AddDialog(GreetingDialog     (greetingId, accessors))              |> ignore
+        this.AddDialog(BookInfoDialog     (bookInfoId, accessors))              |> ignore
+        this.AddDialog(DownloadBookDialog (downloadBookId, accessors, blobCli)) |> ignore
+        this.AddDialog(WaterfallDialog    (mainFlowId, waterfallSteps))         |> ignore
         this.InitialDialogId <- mainFlowId
