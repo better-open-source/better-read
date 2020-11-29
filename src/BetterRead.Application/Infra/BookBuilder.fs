@@ -1,26 +1,26 @@
-﻿module BetterRead.Application.Parsers.BookBuilder
+﻿module BetterRead.Application.Infra.BookBuilder
 
 open System.IO
 
 open Xceed.Document.NET
 open Xceed.Words.NET
 
-open BetterRead.Application.Domain.Book
+open BetterRead.Application.Domain
 
-let private buildHeader content (doc:DocX) =
+let private buildHeader content (doc : DocX) =
     let p = doc.InsertParagraph().Append(content)
                 .FontSize(20.0).Bold()
                 .SpacingBefore(15.0).SpacingAfter(13.0)
     p.Alignment <- Alignment.center
     ()
     
-let private buildParagraph content (doc:DocX) =
+let private buildParagraph content (doc : DocX) =
     let p = doc.InsertParagraph().Append(content).SpacingAfter(5.5)
     p.IndentationFirstLine <- (float32 1)
     p.Alignment <- Alignment.both
     ()
     
-let private buildImage (content:byte[] option) uri (doc:DocX) =
+let private buildImage (content : byte[] option) uri (doc : DocX) =
     match content with
     | Some data -> 
         use ms = new MemoryStream(data)
@@ -49,7 +49,7 @@ let generateDocument book =
     buildImage content uri doc
     
     book.Sheets
-    |> Array.collect (fun sheet -> sheet.SheetContents)
+    |> Array.collect (fun sheet -> sheet.Contents)
     |> Array.iter (fun content -> dispatch content doc)
     
     doc.Save()
