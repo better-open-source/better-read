@@ -23,7 +23,7 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Hosting
 open Microsoft.Extensions.Logging
 
-module MainApp =
+module private BetterReadApiModule =
 
     let botHandler : HttpHandler =
         fun (next : HttpFunc) (ctx : HttpContext) ->
@@ -34,6 +34,10 @@ module MainApp =
                 return! Successful.OK None next ctx
             }
 
+    let errorHandler (ex : Exception) (logger : ILogger) =
+        logger.LogError(EventId(), ex, "An unhandled exception has occurred while executing the request.")
+        clearResponse >=> setStatusCode 500 >=> text ex.Message
+
     let endpoints = [
         GET => route "/"     (text "Bot is running")
         GET => route "/ping" (text "pong")
@@ -41,10 +45,6 @@ module MainApp =
             route "/messages" botHandler
         ]
     ]
-
-    let errorHandler (ex : Exception) (logger : ILogger) =
-        logger.LogError(EventId(), ex, "An unhandled exception has occurred while executing the request.")
-        clearResponse >=> setStatusCode 500 >=> text ex.Message
 
     let configureApp (app : IApplicationBuilder) =
         app.UseGiraffeErrorHandler(errorHandler)

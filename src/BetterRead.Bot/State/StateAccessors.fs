@@ -3,7 +3,7 @@
 open Microsoft.Bot.Builder
 open Microsoft.Bot.Builder.Dialogs
 
-type BotStateAccessors(conversationState: ConversationState) =
+type BotStateAccessors(conversationState : ConversationState) =
     let dialogStateAccessor = conversationState.CreateProperty<DialogState> "BotStateAccessors.DialogState"
     
     member val ConversationState = conversationState with get

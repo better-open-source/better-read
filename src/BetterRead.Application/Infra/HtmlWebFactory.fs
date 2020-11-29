@@ -4,10 +4,10 @@ open System.Text
 
 open HtmlAgilityPack
 
-let private encodingBuilder (name:string) =
+let private encodingBuilder (name : string) =
     Encoding.GetEncoding name
 
 let private htmlWebFactory encoding =
     HtmlWeb (OverrideEncoding = encoding)
 
-let htmlWeb = htmlWebFactory <| encodingBuilder "windows-1251"
+let htmlWeb = encodingBuilder "windows-1251" |> htmlWebFactory 
