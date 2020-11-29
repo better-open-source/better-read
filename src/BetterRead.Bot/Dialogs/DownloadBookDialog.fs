@@ -9,10 +9,9 @@ open Microsoft.Bot.Builder.Dialogs
 
 open BetterRead.Bot.StateAccessors
 open BetterRead.Application.Domain.Book
-open BetterRead.Application.Parsers.BookInfoParser
-open BetterRead.Application.Parsers.BookSheetsParser
 open BetterRead.Application.Parsers.BookBuilder
-open BetterRead.Application.Infra.HtmlWebFactory
+open BetterRead.Application.Infra.GetBook
+open BetterRead.Common.AsyncExtensions
 
 module DownloadBookCommandModule =
     let (|DownloadBookCommand|_|) (msg:string) =
@@ -22,7 +21,6 @@ module DownloadBookCommandModule =
             | _ -> None
         else
             None
-
 
 module private InternalDownloadBookModule =
     
@@ -40,13 +38,16 @@ module private InternalDownloadBookModule =
         let! _= stepContext.SendActivityAsync(activity) |> Async.AwaitTask
         () }
     
+    let sendDocument2 (stepContext: ITurnContext) book = async {
+        ()
+    }
+    
     let finalStepAsync (blobCli: BlobContainerClient) (stepContext: WaterfallStepContext) cancellationToken =
         async {
-            match stepContext.Options :?> Option<int> with
-            | Some id ->
-                let! info = parseBookInfo htmlWeb id
-                let! sheets = parseSheets htmlWeb id
-                do! sendDocument stepContext.Context {Info = info; Sheets = sheets}
+            match! stepContext.Options :?> Option<int> |> Option.map (fun id -> getBlobBook id blobCli)
+                   |> Async.traverseOpt |> Async.map (Option.bind id) with
+            | Some blobBook ->
+                do! sendDocument2 stepContext.Context blobBook
                 ()
             | None -> 
                 let! _= stepContext.Context.SendActivityAsync("Document build failed") |> Async.AwaitTask
