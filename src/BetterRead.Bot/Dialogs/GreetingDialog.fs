@@ -24,11 +24,12 @@ module private InternalGreetingDialogModule =
     [<Literal>]
     let cardImage = "https://github.com/better-open-source/better-read/raw/main/assets/icon.png"
     
+    let botVersion =
+        Assembly.GetExecutingAssembly().GetName().Version.ToString(3)
+    
     let finalStepAsync (stepContext : WaterfallStepContext) cancellationToken =
         async {
-            let version = Assembly.GetExecutingAssembly().GetName().Version
-            let versionText = version.ToString(3)
-            let title = $"BetterRead bot (v.{versionText})"
+            let title = $"BetterRead bot (v.{botVersion})"
             let text = "Greetings! Gonna read books offline? LoveRead books parser and document generator tool is ready to help!"
             let image = ResizeArray<CardImage> [ CardImage(cardImage) ]
             let card = HeroCard(title = title, text = text, images = image)
