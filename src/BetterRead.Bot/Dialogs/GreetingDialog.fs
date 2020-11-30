@@ -18,7 +18,7 @@ module private InternalGreetingDialogModule =
     
     let finalStepAsync (stepContext : WaterfallStepContext) cancellationToken =
         async {
-            let! _= stepContext.Context.SendActivityAsync("Hi from F#!") |> Async.AwaitTask
+            do! stepContext.Context.SendActivityAsync("Hi from F#!") |> Async.AwaitTask |> Async.Ignore
             return! stepContext.EndDialogAsync(null, cancellationToken) |> Async.AwaitTask
         } |> Async.StartAsTask
 

@@ -47,10 +47,12 @@ module private InternalDownloadBookModule =
                                        fileType = docxContentType |},
                           name = blobBook.Name)
                 let activity = MessageFactory.Attachment(attachment)
-                let! _= stepContext.Context.SendActivityAsync(activity) |> Async.AwaitTask
+                do! stepContext.Context.SendActivityAsync(activity)
+                    |> Async.AwaitTask |> Async.Ignore
                 ()
             | None -> 
-                let! _= stepContext.Context.SendActivityAsync("Document build failed") |> Async.AwaitTask
+                do! stepContext.Context.SendActivityAsync("Document build failed")
+                    |> Async.AwaitTask |> Async.Ignore
                 ()
             
             return! stepContext.EndDialogAsync(null, cancellationToken) |> Async.AwaitTask

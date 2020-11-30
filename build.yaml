@@ -1,0 +1,36 @@
+﻿trigger:
+  branches:
+    include:
+      - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+stages:
+  - stage: Main
+    jobs:
+      - job: Version
+        variables:
+          versionPrefixName: 'beta'
+        steps:
+          - checkout: none
+          - bash: |
+              set +x
+              echo '##vso[task.setvariable variable=versionPrefix;isOutput=true]$(versionPrefixName)'
+              set -x
+            condition: eq(variables['Build.SourceBranchName'], 'develop')
+            displayName: Set Version Prefix
+            name: setPrefix
+      - job: Build
+        dependsOn: Version
+        variables:
+          CI_BUILDID: $(Build.BuildId)
+          CI_PRERELEASE: $[ dependencies.Version.outputs['setPrefix.versionPrefix'] ]
+        steps:
+          - task: Bash@3
+            displayName: Docker Build
+            inputs:
+              filePath: 'build.sh'
+              arguments: $(CI_BUILDID) $(CI_PRERELEASE)
+          - publish: ./out
+            displayName: Publish Artifacts
