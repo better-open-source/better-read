@@ -37,12 +37,14 @@ module private InternalBookInfoCommandModule =
                 | (None, _) -> () 
             
                 let activity = MessageFactory.Attachment(card.ToAttachment())
-                let! _= context.SendActivityAsync(activity) |> Async.AwaitTask
+                do! context.SendActivityAsync(activity)
+                    |> Async.AwaitTask |> Async.Ignore
                 ()
             }
         | None ->
             async {
-                let! _= context.SendActivityAsync("We are not able to read this book for some reason...") |> Async.AwaitTask
+                do! context.SendActivityAsync("We are not able to read this book for some reason...")
+                    |> Async.AwaitTask |> Async.Ignore
                 ()
             }
     

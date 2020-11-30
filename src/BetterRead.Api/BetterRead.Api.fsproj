@@ -6,9 +6,11 @@
 
     <ItemGroup>
         <Compile Include="Program.fs" />
+        <Content Include="Dockerfile" />
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="Azure.Core" Version="1.6.0" />
         <PackageReference Include="Giraffe" Version="5.0.0-rc-2" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.0" />
     </ItemGroup>

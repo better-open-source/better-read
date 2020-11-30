@@ -1,0 +1,21 @@
+<Project>
+
+    <PropertyGroup>
+        <VersionPrefix>1.0.0</VersionPrefix>
+    </PropertyGroup>
+
+    <Choose>
+        <When Condition=" '$(CI_PRERELEASE)' != '' AND '$(CI_BUILDID)' != '' ">
+            <PropertyGroup>
+                <VersionPrefix>$(VersionPrefix).$(CI_BUILDID)</VersionPrefix>
+                <VersionSuffix>$(CI_PRERELEASE)</VersionSuffix>
+            </PropertyGroup>
+        </When>
+        <Otherwise>
+            <PropertyGroup>
+                <VersionPrefix>$(VersionPrefix)</VersionPrefix>
+            </PropertyGroup>
+        </Otherwise>
+    </Choose>
+    
+</Project>
