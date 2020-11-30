@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{846CB231-AB09-4A94-A0F1-F0F8B52F3CCE}"
+ProjectSection(SolutionItems) = preProject
+	src\Directory.Build.props = src\Directory.Build.props
+EndProjectSection
 EndProject
 Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "BetterRead.Api", "src\BetterRead.Api\BetterRead.Api.fsproj", "{23044DB5-BCFA-4207-94F4-C5DC020C4AD8}"
 EndProject
