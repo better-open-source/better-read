@@ -85,6 +85,8 @@ module private BetterReadApiModule =
                      .AddConsole()
                      .AddDebug() |> ignore
 
+    let result = 0
+    
     [<EntryPoint>]
     let main _ =
         Encoding.RegisterProvider CodePagesEncodingProvider.Instance
@@ -99,4 +101,4 @@ module private BetterReadApiModule =
                     |> ignore)
             .Build()
             .Run()
-        0
+        result
