@@ -31,5 +31,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:$DotnetVersion AS base
 WORKDIR /app
 COPY --from=build /app/out .
 
+# Container healthcheck
+HEALTHCHECK --interval=30s --timeout=30s --retries=3 \
+   CMD curl --silent --fail http://localhost:8080/_health || exit 1
+
 EXPOSE 8080/tcp
 ENTRYPOINT ["dotnet", "BetterRead.Api.dll"]
