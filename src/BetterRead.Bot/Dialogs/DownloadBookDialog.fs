@@ -38,15 +38,8 @@ module private InternalDownloadBookModule =
         async {
             match! getBlobBook stepContext blobCli with
             | Some blobBook ->
-                let attachment =
-                    Attachment
-                        ( docxContentType,
-                          contentUrl = blobBook.Url.ToString(),
-                          content = {| downloadUrl = blobBook.Url
-                                       uniqueId = Guid.NewGuid()
-                                       fileType = docxContentType |},
-                          name = blobBook.Name)
-                let activity = MessageFactory.Attachment(attachment)
+                let text = $"{blobBook.Name} available [here]({blobBook.Url.ToString()})!"
+                let activity = MessageFactory.Text(text)
                 do! stepContext.Context.SendActivityAsync(activity)
                     |> Async.AwaitTask |> Async.Ignore
                 ()
