@@ -16,6 +16,12 @@ RUN dotnet restore ./src/BetterRead.Api/BetterRead.Api.fsproj
 # Copy everything else and build
 COPY . ./
 
+ARG CI_BUILDID
+ARG CI_PRERELEASE
+
+ENV CI_BUILDID ${CI_BUILDID}
+ENV CI_PRERELEASE ${CI_PRERELEASE}
+
 # Publish to out folder
 RUN dotnet publish ./src/BetterRead.Api/BetterRead.Api.fsproj -c Release -o /app/out
 
